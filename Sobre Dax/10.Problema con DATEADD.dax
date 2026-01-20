@@ -1,0 +1,39 @@
+-- PROBLEMA CON DATEADD
+
+-- Cuando usamos la función DATEADD, hay que tener en cuenta que DATEADD devuelve output con datos de periodos completos, y esto puede ser un problema porque
+-- si estamos comparando datos entre meses, y hay un mes que tenemos datos hasta el día 15, DATEADD nos devolverá la información del mes anterior pero de todo
+-- el mes hasta el último día.
+
+-- SOLUCIÓN 
+
+1. Incluir un campo 'Es futuro' en la tabla calendar
+
+d_fechas = 
+VAR MaxFechaVentas = MAX('h_ventas'[FechaVenta]) // NUEVO
+VAR BaseCalendar =
+    SELECTCOLUMNS(CALENDAR(MIN(h_ventas[FechaVenta]), MAX(h_instalaciones[FechaInstalacion])),"Fecha",[Date])
+RETURN
+    SELECTCOLUMNS (
+        BaseCalendar,
+        "Fecha", [Fecha],
+        "Año", YEAR ( [Fecha] ),
+        "Trimestre", QUARTER( [Fecha] ),
+        "MesNum", MONTH ( [Fecha] ),
+        "MesNombre", FORMAT ( [Fecha], "mmmm" ),
+        "AnoMesNombre", FORMAT ( [Fecha], "mmm yy" ),
+        "AnoMesNum", YEAR ( [Fecha] ) * 100 + MONTH ( [Fecha] ),
+        "NumSemanaAno", WEEKNUM( [Fecha], 1 ),
+        "DiaMes", DAY( [Fecha] ),
+        "DiaSemanaNum", WEEKDAY( [Fecha] ),
+        "DiaSemanaNombre", FORMAT ( [Fecha], "dddd" ),
+        "EsFuturoVentas", IF([Fecha] > MaxFechaVentas, 1, 0) // NUEVO
+    )
+
+2. Incluir ese campo como filtro adicional para modificar el contexto devuelto por DATEADD
+
+Total Ventas PY Comparable = CALCULATE(
+    [Total Ventas], 
+    CALCULATETABLE(
+        DATEADD(d_fechas[Fecha], -1, Year), 
+        d_fechas[EsFuturoVentas] = 0)
+)

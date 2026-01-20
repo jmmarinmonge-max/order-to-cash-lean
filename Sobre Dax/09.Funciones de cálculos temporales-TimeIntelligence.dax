@@ -1,0 +1,112 @@
+-- TIME INTELLIGENCE
+
+-- Devuelve todas las fechas desde el principio del año hasta la fecha especificada, teniendo en cuenta el calendario establecido en el modelo de datos:
+DATESYTD(<Fecha>)
+
+-- Devuelve todas las fechas desde el principio del trimestre hasta la fecha especificada
+DATESQTD(<Fecha>)
+
+-- Devuelve todas las fechas desde el principio del mes hasta la fecha especificada:
+DATESMTD(<Fecha>)
+
+-- Agrega un intervalo específico a una fecha. Puede ser usado para calcular fechas futuras o pasadas:
+DATEADD(<Fecha>, <Número>, <Unidad de tiempo>)
+
+-- Calcula un total acumulado desde el principio del año hasta la fecha especificada:
+TOTALYTD(<Expresión>, <Fecha>, [<Filtro>])
+
+-- Calcula un total acumulado desde el principio del trimestre hasta la fecha especificada:
+TOTALQTD(<Expresión>, <Fecha>, [< Filtro >])
+
+-- Calcula un total acumulado desde el principio del mes hasta la fecha especificada:
+TOTALMTD(<Expresión>, <Fecha>, [< Filtro >])
+
+-- Devuelve un conjunto de fechas que coincide con el período del año anterior a la fecha especificada:
+SAMEPERIODLASTYEAR(<Fecha>)
+
+-- Devuelve un conjunto de fechas que coincide con el mes anterior al de la fecha especificada:
+PREVIOUSMONTH(<Fecha>)
+
+-- Devuelve un conjunto de fechas entre dos fechas especificadas:
+DATESBETWEEN(<FechaInicio>, <FechaFin>)
+
+-- ACUMULADOS
+
+-- Acumulado Ventas por Estado (esto es un ACUMULADO TOTAL):
+CALCULATE(
+    [Total Ventas],
+    d_estado_venta[EstadoVenta] <= MAX(d_estado_venta[EstadoVenta])
+)
+
+-- ACUMULADOS SEGMENTADOS
+
+-- YtD - Ventas acumuladas en el año:
+CALCULATE( [Total Ventas], DATESYTD(NombreTabla[Fecha]))
+
+-- MtD - Devoluciones en el mes:
+CALCULATE( [Total Devoluciones], DATESMTD(NombreTabla[Fecha])
+
+-- QtD - Bajadas en el día:
+CALCULATE( [Total Bajadas], DATESQTD(NombreTabla[Fecha]))
+
+-- Cálculo de acumulados totales:
+VAR Acumulado = CALCULATE([Valor],NombreTabla[Columna])
+VAR MaxValor = MAX(ALL(NombreTabla[Columna]), Acumulado)
+RETURN
+Acumulado
+
+-- VARIACIONES
+
+-- Se aplica la misma estructura para YoY y MoM, tan solo se cambian los valores específicos
+
+-- YoY - Calcula la variación entre el valor actual y el valor del mismo período del año anterior :
+
+VAR ValorActual = [Valor Actual]
+VAR ValorAñoAnterior = CALCULATE(
+[Valor Actual],
+DATEADD('Tabla'[Fecha], -1, YEAR) )
+RETURN
+DIVIDE(ValorActual - ValorAñoAnterior, ValorAñoAnterior, BLANK())
+
+-- MoM % - Calcula la variación porcentual entre el valor actual y el valor del mes anterior
+
+VAR ValorActual = [Valor Actual]
+VAR ValorMesAnterior = CALCULATE(
+[Valor Actual],
+DATEADD('Tabla'[Fecha], -1, MONTH) )
+RETURN
+DIVIDE(ValorActual - ValorMesAnterior, ABS(ValorMesAnterior), BLANK())
+
+-- VENTANAS MÓVILES
+
+-- Calcula la suma acumulada de la columna especificada durante un período de tres meses antes de la fecha más reciente:
+
+VAR SumaMovil = CALCULATE(
+SUM('Tabla'[Columna]),
+DATESINPERIOD('Tabla'[Fecha],MAX('Tabla'[Fecha]), -3, MONTH))
+RETURN
+SumaMovil
+
+-- Calcula la media móvil de las ventas en un período de tres meses antes de la fecha más reciente en la tabla
+
+VAR MediaMovil = CALCULATE(
+'Tabla'[Columna] / DISTINCTCOUNT('Tabla'[Fecha]),
+DATESINPERIOD('Tabla'[Fecha], MAX('Tabla'[Fecha]), -3, MONTH) )
+RETURN
+MediaMovil
+
+-- LIMITAR A LOS ÚLTIMOS N MESES
+
+-- La función clave es EOMONTH que incluye
+
+    1. Fecha de referencia
+    2. Desplazamiento entre meses
+
+# Instalaciones ult 6 meses = 
+VAR fecha_fin = CALCULATE(MAX(h_instalaciones[FechaInstalacion]), ALL())
+VAR fecha_inicio = EOMONTH(fecha_fin, -6) + 1
+VAR resultado = CALCULATE([# Instalaciones],
+FILTER(h_instalaciones,
+h_instalaciones[FechaInstalacion] >= fecha_inicio &&
+h_instalaciones[FechaInstalacion] <= fecha_fin))
+RETURN resultado

@@ -1,0 +1,112 @@
+-- Ver listado de todos los directorios de tu ordenador
+ls
+
+-- Desplazarte para algún directorio de los mostrados tras marcar ls. Por ejemplo, quiero ir al escritorio
+cd Desktop/ -- si no termino de escribir Desktop y pulso tabulador, se termina de escribir
+
+-- Volver al punto anterior
+cd ..
+
+-- Saber la ruta en la que me encuentro ahora mismo
+pwd
+
+-- Crear nueva carpeta en el escritorio nombrada como Hello Git
+mkdir "Hello Git"
+
+-- Abrir VSCode
+Code .
+
+-- Limpiar la consola
+clear
+
+-- Empezar a configurar Git a nivel global. Necesitamos nombre de usuario y correo electrónico
+git config --global user.name "JoseManuel"
+git config --global user.email "jm.marinmonge@gmail.com"
+
+-- Crear fichero python dentro de una carpeta del escritorio
+touch hellogit.py
+
+/* Para indicar en Bash que queremos trabajar con un proyecto de control de versiones en la carpeta de Hello Git,
+con el proyecto hellogit.py*/
+git init -- Esto crea una rama principal llamada master, que sería la versión de tu código
+
+-- Para tunear la terminal bash ir a https://ohmyz.sh
+
+-- Para cambiar el nombre de master por otro nombre, por ejemplo dentro de github se usa main en lugar de master
+git branch -m main
+
+-- Para ver cuál es el estado de nuestro proyecto
+git status -- En este caso nos muestra que no hay commits y que no hay aún ninguna foto del proyecto
+
+-- Para crear la primera fotografía de nuestro proyecto
+git add hellogit.py 
+
+/* Nos sigue diciendo que no hay commits todavía pero ya nos muestra la primera foto como
+new file: hellogit.py*/
+
+-- El commit es cuando se lanza la fotografía realizada de la versión de nuestro proyecto.
+-- Vamos a lanzar nuestro proyecto que teníamos en local
+git commit 
+
+/* Pero nos devuelve que no se puede lanzar si no se mete un comentario que represente lo que
+se está guardando*/ 
+
+-- Por lo que vamos a repetir el proceso asignando un comentario.
+git commit -m "Este es mi primer commit"
+
+-- Para saber si la fotografía se ha creado correctamente
+git log
+
+-- Repetimos proceso para tener una segunda versión, creando hellogit2.py
+
+    -- 1. Creo el fichero .py dentro de vscode nombrado como hellogit2.py
+    -- 2. Verifico el estado de nuestro fichero con el comando git status y veo que existe 
+    -- hellogit2.py sin commitear
+    -- 3. Creo la fotografía o versión de hellogit2.py mediante el comando git add hellogit2.py
+    -- 4. Y commiteo la versión para integrarla en la rama main mediante el comando git commit -m "Este es
+    -- mi segundo commit"
+    -- Compruebo que la versión se ha creado bien con el comando git log y aparecen las dos versiones creadas
+
+-- Para volver a algún punto anterior del proyecto, usamos checkout
+git checkout hellogit2.py
+
+-- Para ver los ficheros con cambios
+git reset 
+ 
+-- Para volver a algún punto anterior del proyecto, usamos checkout
+git checkout hellogit.py
+
+-- Para ver los cambios en las versiones como si fuera una rama
+git log --graph
+
+-- Para verlo más bonito
+git log --graph --decorate --all --oneline
+
+-- Se puede crear alias para no tener que acordarte de todas las sentencias. 
+-- Por ejemplo, si quiero crear un alias sobre 'git log --graph --decorate --all --oneline'
+git config --global alias.tree "log --graph --decorate --all --oneline"
+
+-- Usar alias creado anteriormente
+git tree
+
+-- Si no queremos tener en cuenta algún fichero cuando estemos trabajando con el proyecto, creamos el gitignore
+touch .gitignore -- Esto nos abre un fichero llamado gitignore donde podemos añadir ficheros a ignorar
+
+-- Para no tener en cuenta un ficheo y meterlo dentro de gitignore sería **/.(+ nombre del fichero)
+**/.(+nombredelfichero)
+-- Los asteriscos nos dicen que da igual dónde esté el fichero, cualquier fichero que tenga ese nombre será ignorado
+
+-- Para saber antes de hacer foto sobre los cambios recientes hechos, saber qué ha cambiado con respecto a la foto anterior
+git diff
+
+-- Para volver a una versión previa
+git checkout +clave versión anterior
+
+-- Para ir a la última versión creadas
+git checkout +clave versión última creadas
+
+
+
+
+
+

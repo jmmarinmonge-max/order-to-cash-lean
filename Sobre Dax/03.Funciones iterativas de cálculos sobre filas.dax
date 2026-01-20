@@ -1,0 +1,29 @@
+-- Suma los resultados de una expresión evaluada:
+SUMX('NombreTabla', [Expresión])
+
+-- Calcula la media de los resultados de una expresión evaluada:
+AVERAGEX('NombreTabla', [Expresión])
+
+-- Devuelve el valor mínimo de los resultados de una expresión evaluada:
+MINX('NombreTabla', [Expresión])
+
+-- Devuelve el valor máximo de los resultados de una expresión evaluada:
+MAXX('NombreTabla', [Expresión])
+
+-- Cuenta el número de filas donde una expresión produce un resultado distinto de cero:
+COUNTX('NombreTabla', [Expresión])
+
+-- Filtra filas en una tabla según una condición dada por una expresión:
+FILTER(NombreTabla, [Expresión])
+
+-- Devuelve el resultado, tanto en columna calculada como en medida, entre dos campos de diferentes tablas relacionadas, forzando la relación para obtener el resultado
+-- solo funciona si el campo que lleva related es único
+-- Nos permite solucionar el problema de cuando queremos generar un cálculo (columna calculada o medida), que tenga que usar el contexto de fila, 
+-- entre campos de diferentes tablas, pero el contexto de fila no ve esas relaciones de tablas por defecto, pero solo funciona con campos únicos, es decir,
+-- cuando el campo a buscar (el campo que está dentro de la expresión related) es único (tabla de dimensión). La tabla externa debe ser de dimensión
+Importe X metro = AVERAGEX(h_venas, h_ventas[ImporteTotal] / related(d_clientes(SuperficieMaxima)))
+
+-- Devuelve todas las filas de una tabla relacionada con la fila actual en la otra tabla:
+-- Es el mismo caso que el anterior, pero esta expresión SÍ nos permite que la tabla externa sea de hechos (valores duplicados)
+-- Es útil para hacer conteo
+RELATEDTABLE('NombreTabla_Relacionada’)

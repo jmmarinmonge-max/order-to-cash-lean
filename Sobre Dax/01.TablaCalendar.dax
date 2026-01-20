@@ -1,0 +1,68 @@
+-- Opción 1. Tabla Calendar automática y simple
+
+-- esde el 1 de Enero del primer año de nuestros datos hasta el 31 de Diciembre 
+-- del último año de nuestros datos
+
+D_Fechas = CALENDARAUTO()
+
+-- Opción 2. Tabla Calendar automática y simple para año fiscal
+
+-- Ejemplo si cerramos año fiscal en Agosto irá desde el 1 de Septiembre del primer
+-- año de nuestros datos hasta el 31 de Agosto del último año de nuestros datos
+
+D_Fechas = CALENDARAUTO(8)
+
+-- Opción 3. Tabla Calendar con las fechas exactas de nuestros datos
+
+-- Tienes que cambiar "Tabla[Fecha]" por el nombre de tu tabla y tu campo fecha
+
+D_Fechas = SELECTCOLUMNS(CALENDAR(MIN(Tabla[Fecha]),
+MAX(Tabla[Fecha])),"Fecha",[Date])
+
+-- Opción 4. Tabla Calendar con ventana extendida a las fechas exactas de nuestros datos
+
+-- Tienes que cambiar "Tabla[Fecha]" por el nombre de tu tabla y tu campo fecha
+
+D_Fechas =
+    VAR MinDate = MIN(Tabla[Fecha])
+    VAR MaxDate = MAX(Tabla[Fecha])
+    RETURN
+        SELECTCOLUMNS(
+            CALENDAR(DATE(YEAR(MinDate) - 1, MONTH(MinDate), DAY(MinDate)),
+            DATE(YEAR(MaxDate) + 1, MONTH(MaxDate), DAY(MaxDate))),
+            "Fecha", [Date])
+
+-- 5. Incluir Campos derivados
+
+-- Puedes usar esta opción para ampliar cualquiera de las anteriores
+
+D_Fechas =
+VAR BaseCalendar =
+    CALENDARAUTO()
+RETURN
+    SELECTCOLUMNS (
+        BaseCalendar,
+        "Fecha", [Date],
+        "Año", YEAR ( [Date] ),
+        "Trimestre", QUARTER( [Date] ),
+        "MesNum", MONTH ( [Date] ),
+        "MesNombre", FORMAT ( [Date], "mmmm" ),
+        "AnoMesNombre", FORMAT ( [Date], "mmm yy" ),
+        "AnoMesNum", YEAR ( [Date] ) * 100 + MONTH ( [Date] ),
+        "NumSemanaAno", WEEKNUM( [Date], 1 ),
+        "DiaMes", DAY( [Date] ),
+        "DiaSemanaNum", WEEKDAY( [Date] ),
+        "DiaSemanaNombre", FORMAT ( [Date], "dddd" )
+)
+
+-- FINALIZACIÓN DE LA TABLA CALENDAR
+
+-- 1. Ir a vista informe – D_Fechas - tres puntos – Marcar como tabla de fechas
+-- 2. Vista de modelo – establecer las relaciones activas e inactivas
+-- 3. Crear la jerarquía:
+    -- a. D_Fechas – Fecha – Botón drcho – Crear jerarquía
+    -- b. Año - Botón drcho – Agregar a jerarquía
+    -- c. Lo mismo con todos los niveles que queramos meter
+-- 4. Vista de modelo – ordenar MesNombre y DiaSemanaNombre por su número
+-- 5. Ocultar MesNum y DiaSemanaNum
+-- 6. Ocultar las fechas de otras tablas que no sean la D_Fechas

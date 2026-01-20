@@ -1,0 +1,20 @@
+-- Para contar el número total de registros, todas las filas
+COUNTROWS('NombreTabla’)
+
+-- Para contar el número de valores no vacíos
+COUNTA('NombreTabla'[Columna])
+
+-- Cuenta el número de valores únicos
+DISTINCTCOUNT ('NombreTabla'[Columna])
+
+-- Suma los valores de una columna
+SUM('NombreTabla'[Columna])
+
+-- Calcula La media de los valores de una columna
+AVERAGE('NombreTabla'[Columna])
+
+-- Devuelve el valor mínimo de una columna
+MIN('NombreTabla'[Columna])
+
+-- Devuelve el valor máximo de una columna
+MAX('NombreTabla'[Columna])

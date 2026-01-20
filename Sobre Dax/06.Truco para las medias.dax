@@ -1,0 +1,15 @@
+-- Existe un truco para forzar a las funciones de agregación a usar todos los días aunque sean valores en blanco, poniendo +0
+-- Cuidado, por defecto PowerBI solo opera con los registros en los que existe el dato. Puede ser lo que queramos o no.
+
+Total Ventas= SUM(h_ventas[Importetotal]) = 1.498.930,91
+
+Total dias naturales = COUNTROWS (VALUES(d_fechas[Fecha])) = 1.859
+
+Media Importe por dia = AVERAGEX(VALUES(d_fechas[Fecha]), [Total Ventas]) = 3.728,68
+
+-> Si yo divido 1.498.930,91 entre 1.859 debería salir 3.728,68, pero el resultado es 806,31
+
+-> Lo que está pasando es que aunque creas que al hacer el VALUES, estás contando los días naturales, realmente lo que está pasando es que VALUES en este caso es una operación
+interna a la función de agregación AVERAGEX, por lo que no se tiene en cuenta los datos vacíos porque AVERAGEX es el último paso. Por eso agregamos +0
+
+Media Importe por dia con ceros = AVERAGEX(VALUES(d_fechas[Fecha], [Total Ventas] + 0)) = 806,31

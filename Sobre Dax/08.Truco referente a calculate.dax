@@ -1,0 +1,7 @@
+-- Cuando creamos una medida donde uno de los operadores sea otra medida, lo que hace por detrás POWERBI con la medida que está dentro de la medida que estás creadndo
+-- es un CALCULATE, provocando lo que se conoce como transición de contexto, es decir, al crear una medida usando una función de agregación (contexto de fila), junto con otra
+-- medida, lo que ocurre con esa medida que está dentro de la medida que estamos creando es un calculate, y cambia el contexto de fila a filtro.
+
+-- Esto podría dar cálculos erróneos y que sea computacionalmente costoso.
+
+-- Lo mejor sería usar el cálculo que hemos usado para crear la medida secundaria en lugar de colocar la medida secundaria dentro de la medida que estamos creando

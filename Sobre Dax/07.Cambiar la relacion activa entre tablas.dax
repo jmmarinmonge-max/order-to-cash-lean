@@ -1,0 +1,5 @@
+-- En el modelo de datos se puede tener creadas relacones alternativas entre tablas pero inactivas.
+
+-- Podemos activarlas para una medida concreta con USERELATIONSHIP(campo_unión_tabla1, campo_unión_tabla2)
+
+Ventas Totales UR = CALCULATE(SUM(solarosa_integrada[ImporteTotal]), USERELATIONSHIP(d_fechas[DATE], solarosa_integrada[FechaInstalacion]))
