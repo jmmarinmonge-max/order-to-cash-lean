@@ -29,3 +29,5 @@ sería mejor hacerlo con tablas calculadas como por ejemplo:
     - Ejes de gráficos
     - Leyendas 
     - Crear relaciones con otras tablas
+
+Cuando quiero operar y luego agregar, se usan los iteradores (SUMX, COUNTX...)

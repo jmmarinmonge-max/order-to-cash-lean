@@ -1,6 +1,6 @@
 -- Opción 1. Tabla Calendar automática y simple
 
--- esde el 1 de Enero del primer año de nuestros datos hasta el 31 de Diciembre 
+-- desde el 1 de Enero del primer año de nuestros datos hasta el 31 de Diciembre 
 -- del último año de nuestros datos
 
 D_Fechas = CALENDARAUTO()
