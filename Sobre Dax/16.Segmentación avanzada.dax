@@ -1,0 +1,3 @@
+Podemos personalzar los segmentadores para darle un aspeco visual más atractivo.
+El truco está en crear los datos de la segmentación en n archivo de Excel con la información necesaria e importarlos al modelo.
+

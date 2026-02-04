@@ -1,0 +1,17 @@
+El gráfico de cascada es util para mostrar los incrementos positivos o negativos
+respecto a un total acumulado.
+
+En este ejemplo vamos a analizar las unidades vendidas por localidad y cateogorías de producto.
+
+Además incorporaremos un concepto nuevo que sería la 'observación' mediante un parámetro.
+La 'observación' servirá como ventana para trabajar un mismo gráfico desde dos puntos
+de vista (categoría de producto y grupo).
+
+1. Insertar gráfico de cascada
+2. En la categoría incorporamos la localidad
+3. En el eje Y incorporamos la suma de unidades vendidas
+4. En el desglose incorporamos la 'observación', que se crea mediante un parámetro:
+    - Modelado > Nuevo parámetro > Campos
+    - Insertamos nombre del parámetro 'observación'
+    - Agregamos los campos necesarios para la observación del gráfico, que serían
+    Categoría de producto y grupo.

@@ -1,0 +1,1 @@
+La función Date.From convierte texto a fecha, pero el número debe ir entre comillas

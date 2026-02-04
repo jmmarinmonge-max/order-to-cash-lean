@@ -1,0 +1,40 @@
+GRÁFICO REAL VS OBJETIVO
+
+Pasos para desarrollarlo
+
+1. Tabla resumen
+
+    - Idenficar categoría
+    - Calcular métrica
+    - Idenficar objetivo mediante medida fijada por mí
+
+2. Calcular medidas
+
+-- Ventas realizadas
+
+Ventas realizadas = MIN([Suma de ventas]; [Objetivo de ventas])
+
+-- Ventas no superadas
+
+Ventas no superadas = 
+IF(
+    [Suma de ventas] < [Objetivo de ventas]; 
+    [Objetivo de ventas] - [Suma de ventas]; 
+    BLANK()
+)
+-- Ventas superadas
+
+Ventas superadas = 
+IF(
+    [Suma de ventas] > [Objetivo de ventas]; 
+    [Suma de ventas] - [Objetivo de ventas]; 
+    BLANK() 
+)
+
+3. Graficar con gráfica de barras apiladas y líenas
+
+    - Modificar grosor de línea y personalizar formato de columnas
+    - En el eje de x colocamos localidad u otra categoría según el caso
+    - En el eje y colocamos las medidas creadas anteriormente
+    - En el eje y de línea colocaremos el objetivo de ventas
+
