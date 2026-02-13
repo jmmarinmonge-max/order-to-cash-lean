@@ -1,0 +1,200 @@
+Flecha MoM% Margen Porc = SWITCH(TRUE();
+[MoM% Margen Porc] > 0; "⇧";
+[MoM% Margen Porc] < 0; "⇩";
+"⇨")
+
+Flecha MoM% Ventas $ = SWITCH(TRUE();
+[MoM % Ventas $] > 0; "⇧";
+[MoM % Ventas $] < 0; "⇩";
+"⇨")
+
+Flecha MoM% Ventas $ = SWITCH(TRUE();
+[MoM % Ventas $] > 0; "⇧";
+[MoM % Ventas $] < 0; "⇩";
+"⇨")
+
+Flecha MoM% Ventas Unidades = SWITCH(TRUE();
+[MoM % Ventas Unidades] > 0; "⇧";
+[MoM % Ventas Unidades] < 0; "⇩";
+"⇨")
+
+Flecha MoM% Ventas Unidades = SWITCH(TRUE();
+[MoM % Ventas Unidades] > 0; "⇧";
+[MoM % Ventas Unidades] < 0; "⇩";
+"⇨")
+
+Flecha YoY% Margen Porc = SWITCH(TRUE();
+[YoY % Margen Porc] > 0; "⇧";
+[YoY % Margen Porc] < 0; "⇩";
+"⇨")
+
+Flecha YoY% Margen Porc = SWITCH(TRUE();
+[YoY % Margen Porc] > 0; "⇧";
+[YoY % Margen Porc] < 0; "⇩";
+"⇨")
+
+Flecha YoY% Ventas $ = SWITCH(TRUE();
+[YoY % Ventas $] > 0; "⇧";
+[YoY % Ventas $] < 0; "⇩";
+"⇨")
+
+Flecha YoY% Ventas $ = SWITCH(TRUE();
+[YoY % Ventas $] > 0; "⇧";
+[YoY % Ventas $] < 0; "⇩";
+"⇨")
+
+Flecha YoY% Ventas Unidades = SWITCH(TRUE();
+[YoY % Ventas Unidades] > 0; "⇧";
+[YoY % Ventas Unidades] < 0; "⇩";
+"⇨")
+
+Flecha YoY% Ventas Unidades = SWITCH(TRUE();
+[YoY % Ventas Unidades] > 0; "⇧";
+[YoY % Ventas Unidades] < 0; "⇩";
+"⇨")
+
+Margen Porc - Promedio = SUM(H_Nv_Ventas[ Margen $]) / SUM(H_Nv_Ventas[Precio total con descuento])
+
+Margen Porc Mes Anterior = CALCULATE([Margen Porc Ultimo Mes - Promedio]; DATEADD(H_Nv_Ventas[ Fecha del pedido];-1;MONTH)
+)
+
+Margen Porc Mismo Mes Año Anterior = CALCULATE([Margen Porc Ultimo Mes - Promedio]; DATEADD(H_Nv_Ventas[ Fecha del pedido];-1;year))
+
+Margen Porc Ultimo Mes - Promedio = CALCULATE([Margen Porc - Promedio]; DATESMTD(H_Nv_Ventas[ Fecha del pedido]))
+
+MoM % Ventas $ = 
+VAR numerador = [Ventas $ Ult Mes - Suma] - [Ventas $ Mes Anterior - Suma]
+VAR denominador = ABS([Ventas $ Mes Anterior - Suma])
+VAR resultado = DIVIDE(numerador; denominador; BLANK())
+RETURN resultado
+
+MoM % Ventas $ = 
+VAR numerador = [Ventas $ Ult Mes - Suma] - [Ventas $ Mes Anterior - Suma]
+VAR denominador = ABS([Ventas $ Mes Anterior - Suma])
+VAR resultado = DIVIDE(numerador; denominador; BLANK())
+RETURN resultado
+
+MoM % Ventas Unidades = 
+VAR numerador = [Ventas Unidades Ult Mes - Suma] - [Ventas Unidades Mes Anterior - Suma]
+VAR denominador = ABS([Ventas Unidades Mes Anterior - Suma])
+VAR resultado = DIVIDE(numerador; denominador; BLANK())
+RETURN resultado
+
+MoM% Margen Porc = 
+VAR numerador = [Margen Porc Ultimo Mes - Promedio] - [Margen Porc Mes Anterior]
+VAR denominador = ABS([Margen Porc Mes Anterior])
+VAR resultado = DIVIDE(numerador; denominador; BLANK())
+RETURN resultado
+
+Tendencia Margen Porc Ultimos 12 Meses = 
+VAR fecha_fin = CALCULATE(MAX(H_Nv_Ventas[ Fecha del pedido]); ALL())
+VAR fecha_inicio = EOMONTH(fecha_fin; -12) + 1
+VAR resultado = CALCULATE(SUM(H_Nv_Ventas[ Margen $]);
+FILTER(D_Fechas; D_Fechas[Fecha] >= fecha_inicio && D_Fechas[Fecha] <= fecha_fin))
+RETURN resultado
+
+Tendencia Margen Porc Ultimos 12 Meses = 
+VAR fecha_fin = CALCULATE(MAX(H_Nv_Ventas[ Fecha del pedido]); ALL())
+VAR fecha_inicio = EOMONTH(fecha_fin; -12) + 1
+VAR resultado = CALCULATE(SUM(H_Nv_Ventas[ Margen $]);
+FILTER(D_Fechas; D_Fechas[Fecha] >= fecha_inicio && D_Fechas[Fecha] <= fecha_fin))
+RETURN resultado
+
+Tendencia Ventas $ Ultimos 12 Meses = 
+VAR fecha_fin = CALCULATE(MAX(H_Nv_Ventas[ Fecha del pedido]); ALL())
+VAR fecha_inicio = EOMONTH(fecha_fin; -12) + 1
+VAR resultado = CALCULATE(SUM(H_Nv_Ventas[Precio total con descuento]);
+FILTER(D_Fechas; D_Fechas[Fecha] >= fecha_inicio && D_Fechas[Fecha] <= fecha_fin))
+RETURN resultado
+
+Tendencia Ventas $ Ultimos 12 Meses = 
+VAR fecha_fin = CALCULATE(MAX(H_Nv_Ventas[ Fecha del pedido]); ALL())
+VAR fecha_inicio = EOMONTH(fecha_fin; -12) + 1
+VAR resultado = CALCULATE(SUM(H_Nv_Ventas[Precio total con descuento]);
+FILTER(D_Fechas; D_Fechas[Fecha] >= fecha_inicio && D_Fechas[Fecha] <= fecha_fin))
+RETURN resultado
+
+Tendencia Ventas Unidades Ultimos 12 Meses = 
+VAR fecha_fin = CALCULATE(MAX(H_Nv_Ventas[ Fecha del pedido]); ALL())
+VAR fecha_inicio = EOMONTH(fecha_fin; -12) + 1
+VAR resultado = CALCULATE(SUM(H_Nv_Ventas[ Cantidad]);
+FILTER(D_Fechas; D_Fechas[Fecha] >= fecha_inicio && D_Fechas[Fecha] <= fecha_fin))
+RETURN resultado
+
+Tendencia Ventas Unidades Ultimos 12 Meses = 
+VAR fecha_fin = CALCULATE(MAX(H_Nv_Ventas[ Fecha del pedido]); ALL())
+VAR fecha_inicio = EOMONTH(fecha_fin; -12) + 1
+VAR resultado = CALCULATE(SUM(H_Nv_Ventas[ Cantidad]);
+FILTER(D_Fechas; D_Fechas[Fecha] >= fecha_inicio && D_Fechas[Fecha] <= fecha_fin))
+RETURN resultado
+
+Ventas $ Mes Anterior - Suma = CALCULATE([Ventas $ Ult Mes - Suma]; DATEADD(H_Nv_Ventas[ Fecha del pedido]; -1;MONTH))
+
+Ventas $ Mismo Mes Año Anterior - Suma = CALCULATE([Ventas $ Ult Mes - Suma]; DATEADD(H_Nv_Ventas[ Fecha del pedido];-1;YEAR))
+
+Ventas $ Ult Mes - Suma = CALCULATE(SUM(H_Nv_Ventas[Precio total con descuento]); DATESMTD(H_Nv_Ventas[ Fecha del pedido]))
+
+Ventas Unidades Mes Anterior - Suma = CALCULATE([Ventas Unidades Ult Mes - Suma]; DATEADD(H_Nv_Ventas[ Fecha del pedido];-1;MONTH)
+)
+
+Ventas Unidades Mismo Mes Año Anterior – Suma = CALCULATE([Ventas Unidades Ult Mes - Suma]; DATEADD(H_Nv_Ventas[ Fecha del pedido];-1;year))
+
+Ventas Unidades Ult Mes - Suma = CALCULATE(SUM(H_Nv_Ventas[ Cantidad]); DATESMTD(H_Nv_Ventas[ Fecha del pedido]))
+
+YoY % Margen Porc = 
+VAR numerador = [Margen Porc Ultimo Mes - Promedio] - [Margen Porc Mes Anterior]
+VAR denominador = ABS([Margen Porc Mes Anterior])
+VAR resultado = DIVIDE(numerador; denominador; BLANK())
+RETURN resultado
+
+YoY % Ventas $ = 
+VAR numerador = [Ventas $ Ult Mes - Suma] - [Ventas $ Mismo Mes Año Anterior - Suma]
+VAR denominador = ABS([Ventas $ Mismo Mes Año Anterior - Suma])
+VAR resultado = DIVIDE(numerador; denominador; BLANK())
+RETURN resultado
+
+YoY % Ventas $ = 
+VAR numerador = [Ventas $ Ult Mes - Suma] - [Ventas $ Mismo Mes Año Anterior - Suma]
+VAR denominador = ABS([Ventas $ Mismo Mes Año Anterior - Suma])
+VAR resultado = DIVIDE(numerador; denominador; BLANK())
+RETURN resultado
+
+YtD Pedidos Cancelados = CALCULATE(
+    [Pedidos Cancelados - Conteo];
+    DATESYTD(H_Nv_Pedidos[ Fecha del pedido])
+)
+
+YtD Pedidos Retrasados = CALCULATE([Pedidos Retrasados - Conteo];DATESYTD(H_Nv_Pedidos[ Fecha del pedido]))
+
+Pedidos - Conteo = DISTINCTCOUNT(H_Nv_Ventas[ ID pedido])
+
+Pedidos Cancelados - Conteo = CALCULATE(
+    COUNTROWS(H_Nv_Pedidos);
+    D_Pedidos[ Estado del pedido] = "CANCELED"
+)
+
+Pedidos Retrasados - Conteo = SUM(D_Pedidos[Retrasado])
+
+Pedidos Ultimos 6 meses - Conteo = 
+var fecha_fin = CALCULATE(MAX(H_Nv_Pedidos[ Fecha del pedido]); ALL())
+var fecha_inicio = EOMONTH(fecha_fin; -6) + 1
+var resultado = CALCULATE([Pedidos - Conteo]; 
+                          FILTER(H_Nv_Ventas; H_Nv_Ventas[ Fecha del pedido] >= fecha_inicio && H_Nv_Ventas[ Fecha del pedido] <= fecha_fin))
+RETURN resultado
+
+-- Para saber cuál es la media de unidades que se piden en cada pedido
+
+Unidades Vendidas Por Pedido - Promedio = AVERAGEX(VALUES(H_Nv_Ventas[ ID pedido]);CALCULATE(SUM(H_Nv_Ventas[ Cantidad])))
+
+-- Para hacer lo mismo pero para los ultimos 6 meses
+
+Unidades Vendidas por Pedido Ult 6 meses - Promedio = 
+var fecha_fin = CALCULATE(MAX(H_Nv_Ventas[ Fecha del pedido]); ALL())
+var fecha_inicio = EOMONTH(fecha_fin; - 6) + 1
+var resultado = CALCULATE([Unidades Vendidas por Pedido - Promedio]; 
+                          FILTER(H_Nv_Ventas; H_Nv_Ventas[ Fecha del pedido] >= fecha_inicio && H_Nv_Ventas[ Fecha del pedido] <= fecha_fin))
+RETURN resultado
+
+-- Para calcular el número de clientes
+
+Num Clientes - Conteo = DISTINCTCOUNT(H_Nv_Ventas[ ID cliente])

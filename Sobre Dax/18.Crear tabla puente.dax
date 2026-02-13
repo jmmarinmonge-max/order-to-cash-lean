@@ -1,0 +1,5 @@
+DISTINCT envuelve a UNION: 
+Pais =
+DISTINCT(UNION(DISTINCT(Tienda[Region
+Pais]), DISTINCT(Presupuesto[Region
+Pais])))

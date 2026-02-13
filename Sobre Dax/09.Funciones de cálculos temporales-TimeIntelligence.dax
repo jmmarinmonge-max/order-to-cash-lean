@@ -103,10 +103,10 @@ MediaMovil
     2. Desplazamiento entre meses
 
 # Instalaciones ult 6 meses = 
-VAR fecha_fin = CALCULATE(MAX(h_instalaciones[FechaInstalacion]), ALL())
+VAR fecha_fin = CALCULATE(MAX(h_instalaciones[FechaInstalacion]); ALL())
 VAR fecha_inicio = EOMONTH(fecha_fin, -6) + 1
-VAR resultado = CALCULATE([# Instalaciones],
-FILTER(h_instalaciones,
+VAR resultado = CALCULATE([# Instalaciones]
+FILTER(h_instalaciones;
 h_instalaciones[FechaInstalacion] >= fecha_inicio &&
 h_instalaciones[FechaInstalacion] <= fecha_fin))
 RETURN resultado

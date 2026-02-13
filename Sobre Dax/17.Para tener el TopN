@@ -1,0 +1,10 @@
+-- 1. Selecciono el objeto visual tabla
+
+-- 2. Introduzco según el caso, por ejemplo, la categoría de producto y la cantidad vendida
+
+-- 3. Ordeno para comprobar cómo debería quedar el TopN
+
+-- 4. Despliego la herramienta de Filtros en el panel lateral, selecciono TopN, indico el número para el top (por ejemplo 6) y arrastro el campo
+cantidad vendida.
+
+-- 5. Aplicar filtro.

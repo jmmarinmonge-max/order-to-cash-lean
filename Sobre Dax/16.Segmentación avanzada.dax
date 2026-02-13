@@ -1,3 +1,15 @@
-Podemos personalzar los segmentadores para darle un aspeco visual más atractivo.
-El truco está en crear los datos de la segmentación en n archivo de Excel con la información necesaria e importarlos al modelo.
+-- Podemos personalzar los segmentadores para darle un aspeco visual más atractivo.
 
+-- El truco está en crear los datos de la segmentación en un archivo de Excel con la información necesaria e importarlos al modelo.
+
+-- Habría que tener 3 columnas en un excel con el nombre, descripción y url de flaticon
+
+-- En el nombre inlcuímos el nombre de la sección por ejemplo, según tu set de datos
+
+-- En la descripción me la invento y la pongo en el excel
+
+-- En la url lo busco en flaticon por png
+
+-- Guardo el fichero
+
+-- Vuevlo al proyecto de POWER BI e importo ese libro de excel
