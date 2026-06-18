@@ -1,0 +1,33 @@
+Documentación de referencia DAX:
+
+https://dax.guide/
+
+Aclaraciones:
+
+DAX es un lenguaje funcional (como las funciones de Excel) pero NO opera a nivel de celda, 
+si no a nivel de columna y tabla.
+
+Se compone de:
+    - Funciones
+    - Tipos de datos
+    - Operadores
+    - Declaraciones
+
+En la práctica, lo usaré como analista de datos (20/80) para:
+    - Columnas calculadas
+    - Tablas calculadas
+    - Medidas
+    - Modificar el contexto
+    - Time Intelligence
+    - Acceder a dastos de otras Tablas
+    - Modificar relaciones
+
+En Power BI, la gran mayoría de cálculos lo vamos a hacer con medidas, salvo en ocasiones puntuales, en los que
+sería mejor hacerlo con tablas calculadas como por ejemplo:
+    - Filtrado
+    - Segmentación
+    - Ejes de gráficos
+    - Leyendas 
+    - Crear relaciones con otras tablas
+
+Cuando quiero operar y luego agregar, se usan los iteradores (SUMX, COUNTX...)

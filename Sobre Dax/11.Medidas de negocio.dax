@@ -1,0 +1,98 @@
+-- SOBRE VENTAS
+
+# Ventas = COUNTROWS(h_ventas) 
+
+# Ventas MA (mes anterior) = CALCULATE(
+    [# Ventas],
+    DATEADD(d_fechas[Fecha], -1, MONTH),
+    d_fechas[EsFuturoVentas] = 0
+)
+
+# Ventas AA (año anterior) = CALCULATE(
+    [# Ventas],
+    DATEADD(d_fechas[Fecha], -1, YEAR),
+    d_fechas[EsFuturoVentas] = 0
+)
+
+% Ventas Completadas = 
+VAR v_numerador = CALCULATE([# Ventas], d_estado_ventas[EstadoVenta] = "Completada")
+VAR v_denominador = [# Ventas]
+VAR v_resultado = DIVIDE(v_numerador, v_denominador, BLANK())
+RETURN v_resultado
+
+€ Ventas = SUM(h_ventas[ImporteTotal])
+
+€ Ventas MA = CALCULATE(
+    [€ Ventas],
+     DATEADD(d_fechas[Fecha], -1, MONTH),
+     d_fechas[EsFuturoVentas] = 0
+)
+
+€ Ventas AA = CALCULATE(
+    [€ Ventas],
+     DATEADD(d_fechas[Fecha], -1, YEAR),
+     d_fechas[EsFuturoVentas] = 0
+)
+
+Promedio Importe = AVERAGE(h_ventas[ImporteTotal]) 
+
+Promedio Margen = AVERAGE(h_ventas[Margen])
+
+% Importe Subvencionado = DIVIDE(SUM(h_ventas[ImporteSubvencionado]), [€ Ventas], BLANK())
+
+# Proyectos Subvencion > 50% = COUNTX(h_ventas, 
+ IF(h_ventas[ImporteSubvencionado]/h_ventas[ImporteTotal] > 0.5, 1, BLANK())
+)
+
+% Proyectos Subvencion > 50% = DIVIDE([# Proyectos Subvencion > 50%], [# Ventas], BLANK())
+
+% MoM = 
+ VAR v_numerador = [€ Ventas] - [€ Ventas MA]
+ VAR v_denominador = ABS([€ Ventas MA])
+ VAR v_resultado = DIVIDE(v_numerador, v_denominador, BLANK())
+ RETURN v_resultado
+
+% YoY = 
+ VAR v_numerador = [€ Ventas] - [€ Ventas AA]
+ VAR v_denominador = ABS([€ Ventas AA])
+ VAR v_resultado = DIVIDE(v_numerador, v_denominador, BLANK())
+ RETURN v_resultado
+
+ Total YtD = CALCULATE(
+    [€ Ventas],
+    DATESYTD(d_fechas[Fecha])
+)
+
+€ MM 3M = CALCULATE(
+     [€ Ventas] / DISTINCTCOUNT(d_fechas[AnoMesNombre]),
+     DATESINPERIOD(d_fechas[Fecha], MAX(d_fechas[Fecha]), -3, MONTH)
+)
+
+€ MM 6M = CALCULATE(
+     [€ Ventas] / DISTINCTCOUNT(d_fechas[AnoMesNombre]),
+     DATESINPERIOD(d_fechas[Fecha], MAX(d_fechas[Fecha]), -6, MONTH)
+)
+
+-- SOBRE INSTALACIONES
+
+# Intalaciones = DISTINCTCOUNT(h_instalaciones[IDOperario])
+
+
+-- SOBRE OPERARIOS
+
+# Operarios = DISTINCTCOUNT(h_instalaciones[IDOperario])
+
+# Ingenieros = CALCULATE(
+    [# Operarios],
+    d_operarios[Categoria] = "Ingeniero"
+)
+
+-- SOBRE CLIENTES
+
+# Clientes = DISTINCTCOUNT(h_ventas[IDCliente])
+
+# Clientes Empresa = CALCULATE(
+     [# Clientes],
+     d_clientes[TipoCliente] = "Empresa"
+)
+

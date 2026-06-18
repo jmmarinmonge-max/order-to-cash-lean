@@ -1,0 +1,16 @@
+Para las tarjetas avanzadas seguimos los siguientes pasos:
+
+    1. Insertar una forma por ejemplo un rectángulo de esquinas redondeadas
+    2. Formateamos la forma a nuestro gusto
+    3. Copiamos varias veces la forma para incluir las copias dentro de la forma 
+    4. Incluimos los elementos necesaios dentro de las formas (logotipos, kpis etc) 
+    5. Se puede crear un icono que muestre si se cumple o no se cumple una medida para lo que necesiaremos crear una medida:
+        Flecha_KPI_Acumulado = 
+        VAR Acmulado = [Acumulado Mes]
+        RETURN
+            SWITCH(
+                TRUE(),
+                Acumulado > [KPI Objetivo], "imagen flecha arriba (tecla windows + tecla punto)", // Si el acumulado es mayor que el KPI
+                Acumulado < [KPI Objetivo], "imagen flecha abajo (tecla windows + tecla punto)", // Si el acmulado es menor que el KPI
+                "imagen flecha neutral (tecla windows + tecla punto)" // Si el acumulado es igual al KPI
+            )

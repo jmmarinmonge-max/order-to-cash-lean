@@ -1,0 +1,142 @@
+-- CALCULATE
+
+-- Evalúa una expresión modificada en función de los filtros especificados
+CALCULATE([Expresión], <Filtro1>, <Filtro2>, ...)
+
+-- Similar a Calculate pero devuelve una tabla en lugar de un escalar:
+CALCULATETABLE([Expresión], <Filtro1>, <Filtro2>, ...)
+
+[Expresión]: Puede ser una medida o una fórmula DAX
+<Filtros> : No pueden ser medidas, puede no incluir filtros, si puede ser tabla, campo o criterio V/F (verdadero o falso)
+
+-- ¿Cómo funciona?
+
+    1. Identifica el contexto inicial y convierte todo a contexto filtro
+    2. Elimina filtros existentes
+    3. Añade nuevos filtros
+    4. Ejecuta la expresión
+
+1. PASO 1: IDENTIFICA EL CONTEXTO INCIAL Y CONVIERTE TODO A CONTEXTO DE FILTRO
+
+    - Si en el contexto actual había contextos de filtros, se quedan de momento como están
+    - Si había contexto de filas:
+        - Por ser una Columna Calculada
+        - O por ser un Iterador
+    - Pasa a ser contexto de filtro siendo el contexto de filtro, la fila -> transición de contexto
+
+2. PASO 2: ELIMINA FILTROS EXISTENTES
+
+    - Todo campo que no se mencione en los filtros del calculate sigue igual que estaba
+    - Todo campo que se mencione en los filtros pierde sus filtros, aunque tengamos en la visualización algún segmentador
+    - Podemos mantener los filtros de los campos que se mencionen con KEEPFILTERS dentro de CALCULATE
+    - Funciones ALL para eliminar más filtros
+
+Total Ventas por Estado CC = SUM(h_ventas[ImporteTotal])
+Total Ventas por Estado CC Calculate = CALCULATE(SUM(h_ventas[ImporteTotal]))
+
+-- VALUES
+
+-- Devuelve una tabla de una sola columna con los valores únicos de la variable respetando los filtros. Solemos usarla dentro de medidas:
+[Funcion], ( VALUES('NombreTabla'[Columna]) )
+
+    - Para cuando queremos tener los valores únicos pero respetar los filtros
+
+Num Dias con Ventas VALUES = COUNTROWS(VALUES(h_ventas[FechaVenta])) -> aquí se respetan los filtros
+Num Dias con Ventas ALL = COUNTROWS(ALL(h_ventas[FechaVenta])) -> aquí eliminan todos los filtros
+
+    - Para asegurarnos de elegir lo que queremos
+
+Media Ventas dia natural = DIVIDE([Total Ventas], COUNTROWS(VALUES(h_d_fechas[Fecha]))) -> La dimensión fecha tiene todos los días del calendario natural, con venta y sin venta
+
+Media Ventas dia con ventas = DIVIDE([Total Ventas], COUNTROWS(VALUES(h_ventas[FechaVenta]))) -> En la tabla de hechos, donde aparecen solo las fechas con ventas
+
+-- FILTER
+
+-- Devuelve una tabla con los datos filtrados acorde a los criterios que le hemos pasado. Solemos usarla dentro de calculate para cálculos complejos con agregación previa:
+CALCULATE([Función],
+FILTER({Modificadores}('NombreTabla'[Columna]), [Condición] ))
+
+    - Por sí sola para crear una tabla
+
+Ventas en meses con facturación >100k = 
+FILTER(
+    'd_fechas',
+    CALCULATE(
+        SUM(h_ventqas[ImporteTotal]),
+        ALLEXCEPT(d_fechas, d_fchas[MesNombre])) > 100000
+        )
+
+    - Dentro de CALCULATE
+
+Suma_Importe Total_Mes_Superior_100k = 
+CALCULATE(
+    SUM(h_ventas[ImporteTotal]),
+    FILTER(
+        'd_fechas',
+        CALCULATE(
+            SUM(h_ventas[ImporteTotal]),
+            ALLEXCEPT(d_fechas, d_fechas[MesNombre])
+        ) > 100000
+    )
+)
+
+-- En definitiva, en CALCULATE, todo filtro es una tabla, y toda tabla puede funcionar como filtro
+
+-- Esto: (esta opción a nivel práctico es más sencillo, para casos más sencillo)
+
+Ventas en empresas = CALCULATE([Total Ventas],d_clientes[TipoCliente] = "Empresa")
+
+-- Es lo mismo que: (esta opción es más compleja pero mejor si tenemos que generar algunas modificaciones sobre el contexto de filtro dentro de calculate)
+
+Ventas en empresas FILTER = CALCULATE([Total Ventas], FILTER(ALL(d_clientes[TipoCliente]), d_clientes[TipoCliente] = "Empresa"))
+
+
+-- MODIFICADORES
+
+-- Elimina todos los filtros de todas las columnas de una tabla o de un conjunto de tablas especificadas
+-- El parámetro puede ser:
+    - Nada: Elimina todos los filtros -> ALL()
+    - Una tabla: Elimina todos los filtros de esa tabla -> ALL(d_clientes)
+    - Uno o varios campos: Elimina todos los filtros de esos campos -> ALL(d_clientes[TipoClientes])
+
+CALCULATE([Expresión], ALL('NombreTabla’))
+
+-- Elimina todos los filtros del parámetro pasado pero solo si esos filtros se originan dentro del visual
+-- Los externos al visual se mantienen: segmentaciones, filtros de página, interacción otros visuales, etc
+-- Se usa sobre todo para crear totales de 100%
+-- El parámetro puede ser:
+    - Nada: Elimnia todos los filtros -> ALLSELECTED()
+    - Una tabla: Elimina todos los filtros de esa tabla -> ALLSELECTED(d_clientes)
+    - Uno o varios campos: Elimina todos los filtros de esos campos -> ALLSELECTED(d_clientes[TipoCliente]) 
+
+-- Elimina todos los filtros de una tabla excepto aquellos especificados en una lista de columnas
+
+CALCULATETABLE([Expresión], ALLEXCEPT('NombreTabla', ‘Colum1', ‘Colum2', ...))
+CALCULATETABLE
+
+-- Mantiene los filtros que están presentes actualmente en el contexto de evaluación, mientras aplica nuevos filtros
+
+CALCULATE([Expresión], KEEPFILTERS('NombreTabla'))
+
+-- Existe otra función llamada REMOVEFILTERS que hace lo mismo que ALL, pero ALL se puede usar en más tiuaciones que REMOVEFILTERS, por tanto usaremos ALL pra no liarnos
+
+3. PASO 3. APLICACIÓN DE NUEVOS FILTROS
+
+    - Todo campo que se mencione en los filtros, se aplica como filtro
+
+    Total Ventas con Filtro = CALCULATE(
+        sum(h_ventas[ImporteTotal]),
+        d_clientes[TipoInmueble] = "Oficina") -> Ahora se aplica el filtro de = 'Oficina'
+    
+    - Si se usan varios, filtros se aplica un criterio AND
+
+    Total Ventas con Filtro = CALCULATE(
+        sum(h_ventas[ImporteTotal]),
+        d_clientes[TipoInmueble] = "Oficina",
+        d_Fechas[Año] = 2022) 
+
+    - Se se quiere un criterio OR:
+
+    Total Ventas con Filtro = CALCULATE(
+        sum(h_ventas[ImporteTotal]),
+        d_Fechas[Año] = 2022 || d_Fechas[Año] = 2023) 

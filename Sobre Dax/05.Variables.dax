@@ -1,0 +1,27 @@
+-- VARIABLES
+
+1. Son útiles para hacer más legible el código completo
+2. Se crean con VAR
+3. Se suele poner v_ como prefijo
+4. Solo residen en la medida o columna calculada en la que se crean
+5. El cierre del código debe devolver algo con RETURN
+
+-- Esto:
+
+% Sobre Coste total sin VAR = DIVIDE(
+    SUMX(h_ventas, h_ventas[ImporteTotal] - h_ventas[Margen€]),
+    CALCULATE(
+            SUMX(h_ventas, h_ventas[ImporteTotal] - h_ventas[Margen€]),
+            ALL()
+    )
+)
+
+-- Es lo mismo que esto:
+
+% Sobre Coste total con VAR =
+VAR v_coste = SUMX(h_ventas, h_ventas[ImporteTotal] - h_ventas[Margen€])
+VAR v_coste_total = CALCULATE(SUMX(h_ventas, h_ventas[ImporteTotal] - h_ventas[Margen€]),ALL())
+VAR v_resultado = DIVIDE(v_coste, v_coste_total, 0)
+RETURN v_resultado
+
+-- Al hacerlo con variables, queda más estructurado, más legible, que sobre todo, puede ser seguido por otra persona
